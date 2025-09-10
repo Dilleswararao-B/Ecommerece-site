@@ -8,7 +8,7 @@ import List from './pages/List'
 import Login from './components/Login'
 
 
-export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+export const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 export const currency = '$'
 
 
