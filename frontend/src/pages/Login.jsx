@@ -23,7 +23,7 @@ const Login = () => {
 
     try {
       if (currentState === 'Sign Up') {
-        const response = await axios.post('http://localhost:5000/api/user/register', { name, email, password });
+        const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/user/register`, { name, email, password });
         console.log('Register response:', response.data);
         if (response.data.token) {
           setToken(response.data.token);
@@ -34,7 +34,7 @@ const Login = () => {
           toast.error(response.data.message);
         }
       } else {
-        const response = await axios.post('http://localhost:5000/api/user/login', { email, password });
+        const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/user/login`, { email, password });
         console.log('Login response:', response.data);
         if (response.data.token) {
           setToken(response.data.token);

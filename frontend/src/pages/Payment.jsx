@@ -40,7 +40,7 @@ const Payment = () => {
         address
       };
       let response;
-      const backendUrl = 'http://localhost:5000';
+      const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       if (paymentMethod === 'cod') {
         response = await tokenManager.authenticatedFetch(`${backendUrl}/api/order/place`, {
           method: 'POST',

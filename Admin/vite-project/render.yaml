@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ecommerce-admin
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://ecommerce-backend.onrender.com/api
+      - key: VITE_ADMIN_URL
+        value: https://ecommerce-admin.onrender.com

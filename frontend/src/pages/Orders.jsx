@@ -16,7 +16,7 @@ const Orders = () => {
         setLoading(true);
         setError(null);
         
-        const response = await tokenManager.authenticatedFetch('http://localhost:5000/api/order/userorders', {
+        const response = await tokenManager.authenticatedFetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/order/userorders`, {
           method: 'POST',
           body: JSON.stringify({})
         });
