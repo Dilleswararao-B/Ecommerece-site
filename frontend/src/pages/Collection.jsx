@@ -5,7 +5,7 @@ import ProductItem from '../components/ProductItem';
 import Title from '../components/Title';
 
 const Collection = () => {
-  const { products } = useContext(ShopContext);
+  const { dbProducts } = useContext(ShopContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -39,7 +39,7 @@ const Collection = () => {
 
   // Filter and sort products
   useEffect(() => {
-    let filtered = [...products];
+    let filtered = [...dbProducts];
 
     // Apply search filter
     if (searchQuery.trim() !== '') {
@@ -79,7 +79,7 @@ const Collection = () => {
     }
 
     setFilteredProducts(filtered);
-  }, [products, searchQuery, selectedCategory, selectedSubCategory, sortBy]);
+  }, [dbProducts, searchQuery, selectedCategory, selectedSubCategory, sortBy]);
 
   const handleSearch = (e) => {
     e.preventDefault();

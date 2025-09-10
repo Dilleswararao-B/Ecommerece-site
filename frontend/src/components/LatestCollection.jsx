@@ -4,14 +4,14 @@ import Title from './Title';
 import ProductItem from './ProductItem';
 
 const LatestCollection = () => {
-  const { products } = useContext(ShopContext);
+  const { dbProducts } = useContext(ShopContext);
   const [latestProducts, setLatestProducts] = useState([]);
   const [bestsellerProducts, setBestsellerProducts] = useState([]);
 
   useEffect(() => {
-    setLatestProducts(products.slice(0, 10));
-    setBestsellerProducts(products.slice(10, 20));
-  }, [products]);
+    setLatestProducts(dbProducts.slice(0, 10));
+    setBestsellerProducts(dbProducts.filter(item => item.bestseller).slice(0, 10));
+  }, [dbProducts]);
 
   return (
     <div className='my-10'>

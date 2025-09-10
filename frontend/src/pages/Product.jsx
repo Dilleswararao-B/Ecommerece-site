@@ -11,7 +11,7 @@ const Product = () => {
   const { products, currency, addToCart } = useContext(ShopContext);
   const product = products.find((e) => e._id === productId);
 
-  const [mainImage, setMainImage] = useState(product ? product.image[0] : '');
+  const [mainImage, setMainImage] = useState(product ? product.image[0] : null);
   const [activeTab, setActiveTab] = useState('description');
   const [selectedSize, setSelectedSize] = useState(null);
 
@@ -47,13 +47,18 @@ const Product = () => {
     ));
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!selectedSize) {
-      alert('Please select a size before adding to cart.');
+      toast.error('Please select a size before adding to cart.');
       return;
     }
-    addToCart(product, selectedSize, 1);
-    toast.success('Added to cart!');
+    
+    const success = await addToCart(product, selectedSize, 1);
+    if (success) {
+      toast.success('Added to cart!');
+    } else {
+      toast.error('Failed to add to cart. Please login first and try again.');
+    }
   };
 
   return (
@@ -61,7 +66,7 @@ const Product = () => {
       <div className="flex flex-col md:flex-row gap-8">
         {/* Left side: Product Images */}
         <div className="flex-1 flex flex-col items-center">
-          <img src={mainImage} alt={product.name} className="w-full max-w-md rounded-lg shadow-lg" />
+          {mainImage && <img src={mainImage} alt={product.name} className="w-full max-w-md rounded-lg shadow-lg" />}
           <div className="flex justify-center gap-2 mt-4">
             {product.image.map((img, index) => (
               <img 

@@ -15,10 +15,12 @@ const OrderPlaced = () => {
           <div className="w-full mb-4">
             <h2 className="text-xl font-semibold mb-2">Delivery Address</h2>
             <div className="text-gray-700">
-              <div>{address.name}</div>
+              <div>{address.firstName} {address.lastName}</div>
+              <div>{address.email}</div>
               <div>{address.phone}</div>
-              <div>{address.street}, {address.city}</div>
-              <div>{address.state} - {address.zip}</div>
+              <div>{address.street}</div>
+              <div>{address.city}, {address.state} {address.zip}</div>
+              <div>{address.country}</div>
             </div>
           </div>
         )}

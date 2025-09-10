@@ -14,6 +14,7 @@ import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
 import { ShopContext } from './contexts/ShopContext'
 import Payment from './pages/Payment'
+import TailwindTest from './components/TailwindTest'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

@@ -3,7 +3,7 @@ import { ShopContext } from '../contexts/ShopContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import stripeLogo from '../assets/stripe_logo.png';
-import razorpayLogo from '../assets/razorpay_logo.png';
+import tokenManager from '../utils/tokenManager.js';
 
 const Payment = () => {
   const { cartItems, currency, delivery_fee, clearCart, addOrder } = useContext(ShopContext);
@@ -19,6 +19,7 @@ const Payment = () => {
     phone: '',
   });
   const [paymentMethod, setPaymentMethod] = useState('stripe');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -28,15 +29,42 @@ const Payment = () => {
     setAddress({ ...address, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add validation if needed
-    cartItems.forEach(item => {
-      addOrder(item.productId, item.size);
-    });
-    clearCart();
-    toast.success('Order Confirmed!');
-    navigate('/orderplaced', { state: { address, paymentMethod, total } });
+    if (loading) return;
+    try {
+      const orderData = {
+        cartItems,
+        totalAmount: total,
+        paymentMethod,
+        address
+      };
+      let response;
+      const backendUrl = 'http://localhost:5000';
+      if (paymentMethod === 'cod') {
+        response = await tokenManager.authenticatedFetch(`${backendUrl}/api/order/place`, {
+          method: 'POST',
+          body: JSON.stringify(orderData)
+        });
+      } else if (paymentMethod === 'stripe') {
+        response = await tokenManager.authenticatedFetch(`${backendUrl}/api/order/stripe`, {
+          method: 'POST',
+          body: JSON.stringify(orderData)
+        });
+      }
+      if (response && response.ok) {
+        cartItems.forEach(item => {
+          addOrder(item.productId, item.size);
+        });
+        clearCart();
+        toast.success('Order Confirmed!');
+        navigate('/orderplaced', { state: { address, paymentMethod, total } });
+      } else {
+        toast.error('Order failed. Please try again.');
+      }
+    } catch (error) {
+      toast.error('Order failed. Please try again.');
+    }
   };
 
   if (cartItems.length === 0) {
@@ -94,15 +122,22 @@ const Payment = () => {
               <button type="button" onClick={() => setPaymentMethod('stripe')} className={`flex items-center gap-2 px-6 py-3 rounded border text-base font-semibold transition ${paymentMethod === 'stripe' ? 'border-black bg-gray-100' : 'border-gray-300 bg-white'}`}>
                 <img src={stripeLogo} alt="Stripe" className="h-6" /> 
               </button>
-              <button type="button" onClick={() => setPaymentMethod('razorpay')} className={`flex items-center gap-2 px-6 py-3 rounded border text-base font-semibold transition ${paymentMethod === 'razorpay' ? 'border-black bg-gray-100' : 'border-gray-300 bg-white'}`}>
-                <img src={razorpayLogo} alt="Razorpay" className="h-6" /> 
-              </button>
               <button type="button" onClick={() => setPaymentMethod('cod')} className={`flex items-center gap-2 px-6 py-3 rounded border text-base font-semibold transition ${paymentMethod === 'cod' ? 'border-black bg-gray-100' : 'border-gray-300 bg-white'}`}>
                 <span className="w-3 h-3 rounded-full bg-green-500 inline-block"></span> CASH ON DELIVERY
               </button>
             </div>
           </div>
-          <button type="submit" className="w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition-colors text-lg shadow-none mt-6">PLACE ORDER</button>
+          <button 
+            type="submit" 
+            disabled={loading}
+            className={`w-full font-bold py-3 rounded-lg transition-colors text-lg shadow-none mt-6 ${
+              loading 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-black text-white hover:bg-gray-900'
+            }`}
+          >
+            {loading ? 'Processing...' : 'PLACE ORDER'}
+          </button>
         </div>
       </form>
     </section>

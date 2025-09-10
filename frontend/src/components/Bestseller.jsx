@@ -6,13 +6,13 @@ import { useContext,useEffect,useState } from 'react'
 
 
 const Bestseller = () => {
-    const {products} = useContext(ShopContext);
+    const { dbProducts } = useContext(ShopContext);
     const [bestsellerProducts,setBestsellerProducts] = useState([]);
 
     useEffect(()=>{
-        const bestproducts = products.filter((item)=>item.bestseller === true);
+        const bestproducts = dbProducts.filter((item)=>item.bestseller === true);
         setBestsellerProducts(bestproducts.slice(0,5));
-    },[products]);
+    },[dbProducts]);
 
   return (
     <div className='my-10'>

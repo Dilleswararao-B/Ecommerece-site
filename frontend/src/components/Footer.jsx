@@ -8,7 +8,7 @@ const Footer = () => (
       {/* Logo and Copyright */}
       <div className="flex flex-col items-center md:items-start gap-3">
         <Link to="/">
-          <img src={assets.logo} alt="Logo" className="w-36 mb-2" />
+          <img src={assets.logo2} alt="Logo" className="w-36 h-10 object-cover mb-2" />
         </Link>
         <p className="text-sm text-gray-500">&copy; {new Date().getFullYear()} Your E-Commerce Site. All rights reserved.</p>
       </div>

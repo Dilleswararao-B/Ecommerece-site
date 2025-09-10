@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Title from '../components/Title';
 
 const Cart = () => {
-  const { cartItems, currency, delivery_fee, removeFromCart, updateCartItem } = useContext(ShopContext);
+  const { cartItems, currency, delivery_fee, removeFromCart, updateCartItem, fetchCartFromBackend } = useContext(ShopContext);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const total = subtotal + (cartItems.length > 0 ? delivery_fee : 0);
@@ -21,7 +21,15 @@ const Cart = () => {
   return (
     <section className="w-full min-h-[80vh] flex flex-col items-center py-10 bg-gray-50">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
-        <Title text1="Your " text2="Cart" />
+        <div className="flex justify-between items-center mb-4">
+          <Title text1="Your " text2="Cart" />
+          <button 
+            onClick={fetchCartFromBackend}
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm"
+          >
+            Refresh Cart
+          </button>
+        </div>
         <div className="flex flex-col md:flex-row gap-8 mt-6">
           {/* Cart Items */}
           <div className="flex-1 divide-y">
